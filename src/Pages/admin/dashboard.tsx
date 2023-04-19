@@ -101,7 +101,7 @@ const AdminDashboard = () => {
    }
    fetchData()
   }, [])
-  const unverifiedUsersCount = users.filter((user: { is_verified: boolean; }) => user.is_verified == false).length;
+  const unverifiedUsersCount = users.filter((user: { is_verified: boolean; }) => user.is_verified === false).length;
   const verifiedUsersCount = users.length - unverifiedUsersCount;
 
   // Process data for chart 2

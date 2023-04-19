@@ -1,7 +1,7 @@
 import { Avatar, Button, Card, CircularProgress, Divider, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import 'chart.js/auto';
-import { useState, useEffect, ReactNode, useCallback, useRef, JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react'
+import { useState, useEffect, ReactNode, useCallback, JSXElementConstructor, ReactElement, ReactFragment, ReactPortal } from 'react'
 import LoggedInLayout from 'Components/AuthLayout/loggedIn'
 import Cookies from 'js-cookie';
 import SimpleDialog from 'Components/Dialog/CommentDialog';
@@ -138,7 +138,7 @@ const UserDashboard = () => {
     }
   }, [])
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async() => {
     if (isLoading || !hasMore) {
       return;
     }
@@ -153,10 +153,8 @@ const UserDashboard = () => {
       // Otherwise, we can increment the current page for the next fetch
       setCurrentPage(currentPage + 1);
     }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500)
-  };
+    setIsLoading(false);
+  }, [paginatedPosts, currentPage, hasMore, isLoading]);
 
   useEffect(() => {
     fetchPosts();
@@ -253,7 +251,7 @@ const UserDashboard = () => {
     newPaginatedPosts[paginatedPostIndex] = newPaginatedPost;
     setPaginatedPosts(newPaginatedPosts);
     handleClearComment();
-    const element = document.getElementById('comments-element');
+    const element = document.getElementById(`comments-element-${postId}`);
     if (element) {
       element.scrollTo({
         top: element.scrollHeight,
@@ -289,12 +287,12 @@ const UserDashboard = () => {
           <div className={classes.postsWrapper}>
             {paginatedPosts?.map((post: PaginatedPosts, key: number) => {
               const comment = comments[post.id] || '';
-              if (post.isPublic || (parseInt(userName.id) == post.userId)) {
+              if (post.isPublic || (parseInt(userName.id) === post.userId)) {
                 return (
                   <Card className={classes.postCard} key={key}>
-                    {(parseInt(userName.id) == post.userId) && <CloseIcon onClick={() => handleClickOpenConfirmationDialog(post.id)} className={classes.deleteIcon} />}
+                    {(parseInt(userName.id) === post.userId) && <CloseIcon onClick={() => handleClickOpenConfirmationDialog(post.id)} className={classes.deleteIcon} />}
                     <div className={classes.postInner}>
-                      <div className={classes.postUserName}>{post?.userName?.toUpperCase()}{(parseInt(userName.id) == post.userId) ? post.isPublic ? " (YOU)" : <Grid className={classes.postYouWrapper}>&nbsp;(YOU)<LockIcon /></Grid> : ""}</div>
+                      <div className={classes.postUserName}>{post?.userName?.toUpperCase()}{(parseInt(userName.id) === post.userId) ? post.isPublic ? " (YOU)" : <Grid className={classes.postYouWrapper}>&nbsp;(YOU)<LockIcon /></Grid> : ""}</div>
                       <div><Avatar src="/broken-image.jpg" /></div>
                       <div className={classes.postContent}>
                         <h2>{post.title}</h2>
@@ -304,15 +302,15 @@ const UserDashboard = () => {
                       <Grid display={'flex'} flexDirection={'column'} gap={1}>
                         <Grid className={classes.postNbOfComments}><Typography>{post?.comments?.data?.length}</Typography> <ModeCommentIcon /></Grid>
                         <Grid>
-                         <Grid id="comments-element" className={classes.commentsWrapper}>{post?.comments && post?.comments?.data?.map((comment: {
+                         <Grid id={`comments-element-${post.id}`} className={classes.commentsWrapper}>{post?.comments && post?.comments?.data?.map((comment: {
                             id: number;
                             userId: number;
                             userName: ReactNode; text: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | ReactPortal | null | undefined;
                           }) => {
-                            return <Grid className={classes.commentElement} style={(parseInt(userName.id) == comment.userId) ? { borderRadius: 15, borderTopLeftRadius: 1, backgroundColor: 'lightgreen' } : { borderRadius: 15, borderTopRightRadius: 1, backgroundColor: 'lightgray' }}>
+                            return <Grid className={classes.commentElement} style={(parseInt(userName.id) === comment.userId) ? { borderRadius: 15, borderTopLeftRadius: 1, backgroundColor: 'lightgreen' } : { borderRadius: 15, borderTopRightRadius: 1, backgroundColor: 'lightgray' }}>
                               <Typography fontSize={12} fontWeight={'bold'}>{comment.userName}</Typography>
                               <Typography marginLeft={1} fontSize={12}>{comment.text}</Typography>
-                              {(parseInt(userName.id) == comment.userId) && <Typography onClick={() => handleClickOpenDeleteCommentConfirmationDialog(comment.id)} className={classes.commentDeleteIcon}><CloseIcon fontSize='small' /></Typography>}
+                              {(parseInt(userName.id) === comment.userId) && <Typography onClick={() => handleClickOpenDeleteCommentConfirmationDialog(comment.id)} className={classes.commentDeleteIcon}><CloseIcon fontSize='small' /></Typography>}
                             </Grid>
                           })}</Grid>
                         </Grid>

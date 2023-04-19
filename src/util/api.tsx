@@ -31,7 +31,7 @@ api.interceptors.response.use(
       message: error.response.data.message,
     }
 
-    if (dataErrorMsg == INVALID_TOKEN) {
+    if (dataErrorMsg === INVALID_TOKEN) {
       const pathName = document.location.pathname
       const isUser = USER_PATHS.includes(pathName)
       const isAdmin = ADMIN_PATHS.includes(pathName)

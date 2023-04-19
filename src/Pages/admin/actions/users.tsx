@@ -1,7 +1,7 @@
 import { Grid, Typography, Switch, TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import LoggedInLayout from 'Components/AuthLayout/loggedIn'
 import { makeStyles } from '@mui/styles';
-import { ChangeEvent, JSXElementConstructor, Key, ReactElement, ReactFragment, ReactNode, ReactPortal, useEffect, useState } from 'react';
+import { JSXElementConstructor, Key, ReactElement, ReactFragment, ReactNode, ReactPortal, useEffect, useState } from 'react';
 import { getAllUsers, updateUserLoginStatus } from 'Services/admin/dashboard';
 import PieChartIcon from '@mui/icons-material/PieChart';
 

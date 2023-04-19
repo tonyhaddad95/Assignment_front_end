@@ -17,13 +17,13 @@ const AuthenticationNavigator: React.FC<AuthenticationNavigatorProps> = ({
     const location = useLocation();
 
     useEffect(() => {
-        if (USER_PATHS.includes(location.pathname) && (!isUserAuthenticated || isUserAuthenticated == undefined)) {
+        if (USER_PATHS.includes(location.pathname) && (!isUserAuthenticated || isUserAuthenticated === undefined)) {
             navigate(LOGIN_PATHS.user);
-        } else if (ADMIN_PATHS.includes(location.pathname) && (!isAdminAuthenticated || isAdminAuthenticated == undefined)) {
+        } else if (ADMIN_PATHS.includes(location.pathname) && (!isAdminAuthenticated || isAdminAuthenticated === undefined)) {
             navigate(LOGIN_PATHS.admin);
-        } else if (isAdminAuthenticated && LOGIN_PATHS.admin == location.pathname){
+        } else if (isAdminAuthenticated && LOGIN_PATHS.admin === location.pathname){
             navigate(ADMIN_PATHS[0]);
-        } else if (isUserAuthenticated && LOGIN_PATHS.user == location.pathname) {
+        } else if (isUserAuthenticated && LOGIN_PATHS.user === location.pathname) {
             navigate(USER_PATHS[0]);
         }
     }, [isUserAuthenticated, isAdminAuthenticated]);
